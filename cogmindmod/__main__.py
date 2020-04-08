@@ -123,13 +123,14 @@ def main():
     parser = argparse.ArgumentParser(prog="cogmindmod")
     parser.add_argument("cogmind", type=pathlib.Path,
                         help="Path to Cogmind directory")
-    parser.add_argument("--keep", action="append", default=[],
+    parser.add_argument("--keep", action="append", default=[], metavar="CHAR",
                         help="ASCII character to keep as graphical tile")
     parser.add_argument("--keep-code", action="append", type=int, default=[],
+                        metavar="CODE",
                         help="Tile number to keep as graphical tile")
     parser.add_argument("--multitile", action="store_true",
                         help="Enable multitile entity scaling")
-    parser.add_argument("--custom", type=pathlib.Path,
+    parser.add_argument("--custom", type=pathlib.Path, metavar="DIR",
                         help="Directory with custom tiles")
     args = parser.parse_args()
 
