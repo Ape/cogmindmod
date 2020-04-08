@@ -76,6 +76,10 @@ def render(args, image, tiles, custom):
             size, x, y = mappings.MULTITILE_PARTS[i]
             char = mappings.REPLACEMENTS[i]
             tile = tiles[mappings.ASCII.inv[char]]
+
+            if args.multitile_bg is not None:
+                tile[tile == 0] = args.multitile_bg
+
             scaled = np.kron(tile, np.ones((size, size), dtype=int))
             return scaled[y*height:(y+1)*height, x*width:(x+1)*width]
         elif i in mappings.REPLACEMENTS:
@@ -130,6 +134,8 @@ def main():
                         help="Tile number to keep as graphical tile")
     parser.add_argument("--multitile", action="store_true",
                         help="Enable multitile entity scaling")
+    parser.add_argument("--multitile-bg", type=int, metavar="VALUE",
+                        help="Multitile background intensity (0..255)")
     parser.add_argument("--custom", type=pathlib.Path, metavar="DIR",
                         help="Directory with custom tiles")
     args = parser.parse_args()
