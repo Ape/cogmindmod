@@ -396,3 +396,22 @@ REPLACEMENTS = {
     670: None,
     671: None,
 }
+
+MULTITILE = {
+    407: 3,
+    440: 2,
+    444: 2,
+    472: 2,
+    483: 3,
+    499: 2,
+    503: 2,
+    518: 2,
+    524: 3,
+}
+
+MULTITILE_PARTS = {}
+for tile, size in MULTITILE.items():
+    for y in range(size):
+        for x in range(size):
+            index = tile + x + y*size
+            MULTITILE_PARTS[index] = (size, x, y)

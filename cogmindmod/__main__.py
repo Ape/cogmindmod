@@ -65,11 +65,20 @@ def load_custom(font, directory):
 
 
 def render(args, image, tiles, custom):
+    width = image.shape[0] // GRID_ROWS
+    height = image.shape[1] // GRID_COLS
+
     def tile(i):
         if i in args.keep_code:
             return tiles[i]
 
-        if i in mappings.REPLACEMENTS:
+        if args.multitile and i in mappings.MULTITILE_PARTS:
+            size, x, y = mappings.MULTITILE_PARTS[i]
+            char = mappings.REPLACEMENTS[i]
+            tile = tiles[mappings.ASCII.inv[char]]
+            scaled = np.kron(tile, np.ones((size, size), dtype=int))
+            return scaled[y*height:(y+1)*height, x*width:(x+1)*width]
+        elif i in mappings.REPLACEMENTS:
             char = mappings.REPLACEMENTS[i]
         elif i in mappings.ASCII:
             char = mappings.ASCII[i]
@@ -84,9 +93,6 @@ def render(args, image, tiles, custom):
             return tiles[i]
 
         return tiles[mappings.ASCII.inv[char]]
-
-    width = image.shape[0] // GRID_ROWS
-    height = image.shape[1] // GRID_COLS
 
     output = np.zeros_like(image)
 
@@ -121,6 +127,8 @@ def main():
                         help="ASCII character to keep as graphical tile")
     parser.add_argument("--keep-code", action="append", type=int, default=[],
                         help="Tile number to keep as graphical tile")
+    parser.add_argument("--multitile", action="store_true",
+                        help="Enable multitile entity scaling")
     parser.add_argument("--custom", type=pathlib.Path,
                         help="Directory with custom tiles")
     args = parser.parse_args()
