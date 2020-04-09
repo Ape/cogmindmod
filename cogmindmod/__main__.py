@@ -11,6 +11,7 @@ import numpy as np
 from . import mappings
 
 
+ZIP_COMMENT = b"cogmindmod"
 GRID_ROWS = 21
 GRID_COLS = 32
 
@@ -153,7 +154,7 @@ def main():
         with zipfile.ZipFile(main_file, "r") as main_zip:
             comment = main_zip.comment
 
-        if comment != b"cogmindmod":
+        if comment != ZIP_COMMENT:
             print("Moving the original file to 'cogmind.x.orig...'")
             main_file.replace(orig_file)
     except IOError as e:
@@ -162,7 +163,7 @@ def main():
     try:
         with zipfile.ZipFile(orig_file, "r") as zin, \
              zipfile.ZipFile(main_file, "w") as zout:
-            zout.comment = b"cogmindmod"
+            zout.comment = ZIP_COMMENT
 
             for item in zin.infolist():
                 data = zin.read(item.filename)
