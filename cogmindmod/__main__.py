@@ -72,6 +72,9 @@ def render(args, image, tiles, custom):
         if i in args.keep_code:
             return tiles[i]
 
+        if args.keep_multitile and i in mappings.MULTITILE_PARTS:
+            return tiles[i]
+
         if i in mappings.REPLACEMENTS:
             char = mappings.REPLACEMENTS[i]
         elif i in mappings.ASCII:
@@ -137,6 +140,8 @@ def main():
                         help="Enable multitile entity scaling")
     parser.add_argument("--multitile-bg", type=int, metavar="VALUE",
                         help="Multitile background intensity (0..255)")
+    parser.add_argument("--keep-multitile", action="store_true",
+                        help="Keep multitile entities as graphical tiles")
     parser.add_argument("--custom", type=pathlib.Path, metavar="DIR",
                         help="Directory with custom tiles")
     args = parser.parse_args()
