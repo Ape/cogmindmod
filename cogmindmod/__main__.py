@@ -72,17 +72,7 @@ def render(args, image, tiles, custom):
         if i in args.keep_code:
             return tiles[i]
 
-        if args.multitile and i in mappings.MULTITILE_PARTS:
-            size, x, y = mappings.MULTITILE_PARTS[i]
-            char = mappings.REPLACEMENTS[i]
-            tile = tiles[mappings.ASCII.inv[char]]
-
-            if args.multitile_bg is not None:
-                tile[tile == 0] = args.multitile_bg
-
-            scaled = np.kron(tile, np.ones((size, size), dtype=int))
-            return scaled[y*height:(y+1)*height, x*width:(x+1)*width]
-        elif i in mappings.REPLACEMENTS:
+        if i in mappings.REPLACEMENTS:
             char = mappings.REPLACEMENTS[i]
         elif i in mappings.ASCII:
             char = mappings.ASCII[i]
@@ -90,13 +80,24 @@ def render(args, image, tiles, custom):
             print(f"Warning: Missing ASCII replacement for tile {i}")
             return tiles[i]
 
-        if char in custom:
-            return custom[char]
-
         if char is None or char in args.keep:
             return tiles[i]
 
-        return tiles[mappings.ASCII.inv[char]]
+        if char in custom:
+            tile = custom[char]
+        else:
+            tile = tiles[mappings.ASCII.inv[char]]
+
+        if args.multitile and i in mappings.MULTITILE_PARTS:
+            size, x, y = mappings.MULTITILE_PARTS[i]
+
+            if args.multitile_bg is not None:
+                tile[tile == 0] = args.multitile_bg
+
+            scaled = np.kron(tile, np.ones((size, size), dtype=int))
+            return scaled[y*height:(y+1)*height, x*width:(x+1)*width]
+
+        return tile
 
     output = np.zeros_like(image)
 
