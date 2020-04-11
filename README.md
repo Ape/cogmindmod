@@ -21,13 +21,14 @@ You can use the tool with:
 python -m cogmindmod [options] /path/to/cogmind
 ```
 
-For example, to build the [ASCII + Graphical walls
+For example, to build the ["Graphical ASCII mode"
 mod](https://ape3000.com/cogmindmod/) run:
 
 ```
 python -m cogmindmod \
 	--keep "#" \
 	--keep-code 318 \
+	--multitile \
 	--custom custom \
 	/path/to/cogmind
 ```
